@@ -1,6 +1,6 @@
 # Secure password
 
-jQuery plugin that checks password safety by some rules. Simpler characters used means longer password needed.
+jQuery plugin that checks password safety by some predefined rules. Simpler characters used means longer password needed.
 
 It automatically renders progress on a `<progress class="js-progress">` element and shows hints in a `.js-error` div.
 
