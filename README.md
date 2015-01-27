@@ -25,7 +25,7 @@ It automatically renders progress on a `<progress class="js-progress">` element 
 ## Rules
 
 ```
-a-z 0-9 + dash: min length 18
-a-z A-Z 0-9 + dash: min length 12
-a-z A-Z 0-9 + dash + special characters: min length 8
+a-z A-Z + dash + space: min length 25
+a-z A-Z 0-9 + dash + space: min length 10
+a-z A-Z 0-9 + dash + space + special characters: min length 6
 ```
