@@ -11,9 +11,8 @@
     messages: {
       safe: 'Strong is the password.',
       length: 'Password is not long enough.',
-      lengthAlphaNum: 'Password is not long enough for lowercase alphanumeric.',
-      lengthAlphaNumMixed: 'Password is not long enough for mixed case alphanumeric.',
-      whitespace: 'Password should not contain whitespace'
+      alphabetic: 'Password is not long enough for alphabetic characters only.',
+      alphanumeric: 'Password is not long enough for numeric characters only.'
     }
   };
 
@@ -48,29 +47,26 @@
   }
 
   SecurePassword.prototype.checkPasswordStrength = function (password) {
-    if (!!password.match(/\s+/g)) {
-      return { valid: false, error: this.options.messages.whitespace };
-    }
 
-    // Check if password only contains a-z and dash
+    // Check if password only contains a-z, space and dash
 
-    var hasLowercaseOnly = password.match(/^[a-z0-9\-]+$/);
+    var alphabetic = password.match(/^[a-zA-Z\- ]+$/);
 
-    if (!!hasLowercaseOnly && hasLowercaseOnly[0] === password) {
-      if (password.length < 18) {
-        return { valid: false, strength: password.length / 18, error: this.options.messages.lengthAlphaNum }
+    if (!!alphabetic && alphabetic[0] === password) {
+      if (password.length < 25) {
+        return { valid: false, strength: password.length / 25, error: this.options.messages.alphabetic }
       } else {
-        return { valid: true, strength: password.length / 18 }
+        return { valid: true, strength: password.length / 25 }
       }
     }
 
-    var hasUppercase = password.match(/^[a-zA-Z0-9\-]+$/);
+    var alphanumeric = password.match(/^[a-zA-Z0-9\- ]+$/);
 
-    if (!!hasUppercase && hasUppercase[0] === password) {
-      if (password.length < 12) {
-        return { valid: false, strength: password.length / 12, error: this.options.messages.lengthAlphaNumMixed }
+    if (!!alphanumeric && alphanumeric[0] === password) {
+      if (password.length < 10) {
+        return { valid: false, strength: password.length / 10, error: this.options.messages.alphanumeric }
       } else {
-        return { valid: true, strength: password.length / 12 }
+        return { valid: true, strength: password.length / 10 }
       }
     }
 
@@ -78,12 +74,11 @@
     // there are special characters inside
     // so we just check for length
 
-    if (password.length < 8) {
-      return { valid: false, strength: password.length / 8, error: this.options.messages.length }
+    if (password.length < 6) {
+      return { valid: false, strength: password.length / 6, error: this.options.messages.length }
     } else {
-      return { valid: true, strength: password.length / 8 }
+      return { valid: true, strength: password.length / 6 }
     }
-
   }
 
   $.fn['securePassword'] = function (options) {
