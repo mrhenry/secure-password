@@ -47,38 +47,50 @@
   }
 
   SecurePassword.prototype.checkPasswordStrength = function (password) {
+    var alphabetic, alphanumeric, length;
 
-    // Check if password only contains a-z, space and dash
+    password = new Password(password);
 
-    var alphabetic = password.match(/^[a-zA-Z\- ]+$/);
+    alphabetic = password.checkAlphabetic();
+    if (!!alphabetic) { return $.extend(alphabetic, { error: this.options.messages.alphabetic }); }
 
-    if (!!alphabetic && alphabetic[0] === password) {
-      if (password.length < 25) {
-        return { valid: false, strength: password.length / 25, error: this.options.messages.alphabetic }
-      } else {
-        return { valid: true, strength: password.length / 25 }
-      }
+    alphanumeric = password.checkAlphaNumeric();
+    if (!!alphanumeric) { return $.extend(alphanumeric, { error: this.options.messages.alphanumeric }); }
+
+    length = password.checkLength();
+    if (!!length) { return $.extend(length, { error: this.options.messages.length }); }
+  }
+
+  function Password (password) {
+    this.password = password;
+  }
+
+  Password.prototype.checkAlphabetic = function (minLength) {
+    var matched = this.password.match(/^[a-zA-Z\- ]+$/);
+    minLength = minLength || 25;
+
+    if (!!matched && matched[0] === this.password) {
+      return { valid: (this.password.length >= minLength), strength: this.password.length / minLength }
     }
 
-    var alphanumeric = password.match(/^[a-zA-Z0-9\- ]+$/);
+    return false;
+  }
 
-    if (!!alphanumeric && alphanumeric[0] === password) {
-      if (password.length < 10) {
-        return { valid: false, strength: password.length / 10, error: this.options.messages.alphanumeric }
-      } else {
-        return { valid: true, strength: password.length / 10 }
-      }
+  Password.prototype.checkAlphaNumeric = function (minLength) {
+    var matched = this.password.match(/^[a-zA-Z0-9\- ]+$/);
+    minLength = minLength || 10;
+
+    if (!!matched && matched[0] === this.password) {
+      return { valid: (this.password.length >= minLength), strength: this.password.length / minLength }
     }
 
-    // If the password didn't match any regex until here,
-    // there are special characters inside
-    // so we just check for length
+    return false;
+  }
 
-    if (password.length < 6) {
-      return { valid: false, strength: password.length / 6, error: this.options.messages.length }
-    } else {
-      return { valid: true, strength: password.length / 6 }
-    }
+  Password.prototype.checkLength = function (minLength) {
+    minLength = minLength || 6;
+
+    return { valid: (this.password.length >= minLength), strength: this.password.length / minLength }
   }
 
   $.fn['securePassword'] = function (options) {
