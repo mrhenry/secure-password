@@ -6,13 +6,15 @@
   var defaults = {
     targets: {
       error: '.js-error',
+      match: '.js-match',
       strength: '.js-strength'
     },
     messages: {
       safe: 'Strong is the password.',
       length: 'Password is not long enough.',
       alphabetic: 'Password is not long enough for alphabetic characters only.',
-      alphanumeric: 'Password is not long enough for numeric characters only.'
+      alphanumeric: 'Password is not long enough for numeric characters only.',
+      match: 'Passwords don\'t match'
     }
   };
 
@@ -22,10 +24,18 @@
 
     this.options = $.extend({}, defaults, options);
 
+    this.targets = {
+      $error: $(this.options.targets.error),
+      $match: $(this.options.targets.match),
+      $strength: $(this.options.targets.strength)
+    };
+
     this.init().bind();
   }
 
   SecurePassword.prototype.init = function () {
+    this.targets.$match.attr('disabled', 'disabled');
+
     return this;
   }
 
@@ -33,13 +43,29 @@
     this.$el.on('keyup blur', $.proxy(function () {
       var res = this.checkPasswordStrength(this.$el.val());
 
+      this.targets.$match.val('');
+
       if (!res.valid && !!res.error) {
-        $(this.options.targets.error).text(res.error);
+        this.targets.$error.text(res.error);
+        this.targets.$match.attr('disabled', 'disabled');
+        this.targets.$match.val('');
       } else {
-        $(this.options.targets.error).text(this.options.messages.safe);
+        this.targets.$error.text(this.options.messages.safe);
+        this.targets.$match.removeAttr('disabled');
       }
 
-      $(this.options.targets.strength).attr('value', res.strength);
+      this.targets.$strength.attr('value', res.strength);
+
+    }, this));
+
+    this.targets.$match.on('keyup blur', $.proxy(function () {
+      var res = this.checkMatch(this.$el.val());
+
+      if (!res.valid && !!res.error) {
+        this.targets.$error.text(res.error);
+      } else {
+        this.targets.$error.text(this.options.messages.safe);
+      }
 
     }, this));
 
@@ -60,6 +86,26 @@
     length = password.checkLength();
     if (!!length) { return $.extend(length, { error: this.options.messages.length }); }
   }
+
+  SecurePassword.prototype.checkMatch = function (password) {
+    var $match = $(this.options.targets.match);
+
+    if (!!$match.length) {
+      if ($match.val() === password) {
+        return { valid: true };
+      } else {
+        return { valid: false, error: this.options.messages.match }
+      }
+    }
+
+    return true;
+  };
+
+  SecurePassword.prototype.validate = function () {
+    var password = this.$el.val();
+
+    return (this.checkPasswordStrength(password).valid && this.checkMatch(password).valid);
+  };
 
   function Password (password) {
     this.password = password;

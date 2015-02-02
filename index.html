@@ -5,7 +5,9 @@
   <title></title>
 </head>
 <body>
-  <input type="password" />
+  <input type="password" name="password" />
+  <input type="password" name="repeat" class="js-match" />
+  <button>Test submit</button>
   <p><strong>Password strength</strong></p>
   <progress value="0" max="1" class="js-strength"></progress>
   <p class="js-error"></p>
@@ -13,7 +15,13 @@
   <script src="jquery.secure-password.js"></script>
   <script>
     (function () {
-      $('input[type="password"]').securePassword();
+      var $el = $('input[type="password"][name="password"]');
+
+      $el.securePassword();
+
+      $('button').on('click', function () {
+        $('body').append($el.data('securePassword').validate() ? 'Valid<br />' : 'Invalid<br />');
+      });
     }());
   </script>
 </body>
