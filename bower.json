@@ -1,11 +1,11 @@
 {
   "name": "secure-password",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "authors": [
     "Pieter Beulque <pieter@mrhenry.be>"
   ],
   "description": "jQuery plugin that checks password safety by some predefined rules. Simpler characters used means longer password needed.",
-  "main": "secure-password.jquery.js",
+  "main": "jquery.secure-password.js",
   "keywords": [
     "jquery",
     "secure",
