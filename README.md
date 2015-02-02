@@ -1,23 +1,27 @@
 # Secure password
 
-jQuery plugin that checks password safety by some predefined rules. Simpler characters used means longer password needed.
+jQuery plugin that checks password safety by some predefined rules. Simpler characters used means longer password needed. Also allows for repeat password pattern.
+
+If you want to check password strength on form submit, use `$('selector').data('securePassword').validate()` which returns a boolean.
 
 It automatically renders progress on a `<progress class="js-progress">` element and shows hints in a `.js-error` div.
 
 ## Options
 
 ```
+js
 {
-  targets: {
+    targets: {
     error: '.js-error',
+    match: '.js-match',
     strength: '.js-strength'
   },
   messages: {
     safe: 'Strong is the password.',
     length: 'Password is not long enough.',
-    lengthAlphaNum: 'Password is not long enough for lowercase alphanumeric.',
-    lengthAlphaNumMixed: 'Password is not long enough for mixed case alphanumeric.',
-    whitespace: 'Password should not contain whitespace'
+    alphabetic: 'Password is not long enough for alphabetic characters only.',
+    alphanumeric: 'Password is not long enough for numeric characters only.',
+    match: 'Passwords don\'t match'
   }
 }
 ```
