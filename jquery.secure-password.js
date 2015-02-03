@@ -98,7 +98,7 @@
       }
     }
 
-    return true;
+    return { valid: true };
   };
 
   SecurePassword.prototype.validate = function () {
