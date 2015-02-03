@@ -8,8 +8,7 @@ It automatically renders progress on a `<progress class="js-progress">` element 
 
 ## Options
 
-```
-js
+```js
 {
     targets: {
     error: '.js-error',
